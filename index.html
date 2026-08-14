@@ -225,11 +225,43 @@
 
         .candidate-row {
             display: grid;
-            grid-template-columns: 180px 1fr 70px;
+            grid-template-columns: 160px 1fr 70px;
             border-bottom: 1px solid var(--border-color);
-            min-height: 90px;
+            min-height: 170px;
             background: rgba(255, 255, 255, 0.4);
             transition: background-color 0.3s;
+        }
+        
+        .candidate-photo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .candidate-img {
+            max-width: 90px;
+            max-height: 110px;
+            width: auto;
+            height: auto;
+            border: 1px solid var(--border-color);
+            background-color: #eae3d5;
+            display: block;
+            flex-shrink: 0;
+        }
+
+        .candidate-img-placeholder {
+            width: 90px;
+            height: 110px;
+            border: 1px solid var(--border-color);
+            background-color: #eae3d5;
+            display: none; /* Скрыт по умолчанию, показывается только при ошибке загрузки картинки */
+            justify-content: center;
+            align-items: center;
+            font-size: 36px;
+            flex-shrink: 0;
         }
 
         .candidate-row:last-child {
@@ -736,7 +768,7 @@
                 margin: 0 auto;
             }
             .candidate-row {
-                grid-template-columns: 120px 1fr 55px;
+                grid-template-columns: 170px 1fr 55px;
             }
             .candidate-name {
                 padding: 8px;
@@ -769,13 +801,11 @@
     <div class="vpn-overlay" id="vpnOverlay">
         <div class="vpn-box">
             <div class="vpn-icon">🔒</div>
-            <div class="vpn-title">Ошибка безопасного шифрования (ГАС-Выборы)</div>
+            <div class="vpn-title">Требуется подключение по VPN</div>
             <div class="vpn-body">
-                <p style="font-weight: bold; margin-bottom: 10px;">Соединение с серверами верификации заблокировано!</p>
-                <p>Для корректной работы избирательной системы, отправки зашифрованного бюллетеня и электронной подписи требуется прямой доступ к серверам верификации Telegram API.</p>
-                <p style="margin-top: 10px; font-style: italic; color: #666;">Пожалуйста, включите VPN в вашем браузере или на устройстве и обновите эту страницу.</p>
+                <p>Для корректной работы сайта и отправки вашего голоса необходимо включить VPN.</p>
             </div>
-            <button class="vpn-btn" onclick="window.location.reload();">Я включил VPN, обновить</button>
+            <button class="vpn-btn" onclick="window.location.reload();">Обновить страницу</button>
         </div>
     </div>
 
@@ -820,60 +850,105 @@
                 <!-- Список кандидатов -->
                 <div class="candidates-list" id="candidatesList">
                     
-                    <!-- Кандидат 1 (Админов - правильный кандидат) -->
+                    <!-- Кандидат 1 (Щепетильников - правильный кандидат) -->
                     <div class="candidate-row" data-id="1">
                         <div class="candidate-name">
-                            <span class="last-name">АДМИНОВ</span>
-                            <span>Админ</span>
-                            <span>Админович</span>
+                            <div class="candidate-photo-container">
+                                <img class="candidate-img" src="images/shepetilnikov.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" alt="ЩЕПЕТИЛЬНИКОВ">
+                                <div class="candidate-img-placeholder">👤</div>
+                                <div style="display: flex; flex-direction: column;">
+                                    <span class="last-name">Щепетильников</span>
+                                    <span>Максим</span>
+                                    <span>Игоревич</span>
+                                </div>
+                            </div>
                         </div>
                         <div class="candidate-bio">
-                            1999 года рождения; место жительства — Спавн; Главный Администратор сервера «Albion»; выдвинут гильдией «Власть и Порядок»; член партии «Единый Альбион». Единственный сертифицированный повелитель бан-молота, отец-основатель дискорда, профессиональный игнорировщик тикетов поддержки.
+                            Щепетильников Максим Игоревич, 1998 года рождения; уроженец города Астрахани; действующий и единственный легитимный Администратор сервера; представитель партии «Единая Альбиония». Последователь тиранического и угнетательского курса, сторонник административной вертикали и неограниченной власти. Известен бескомпромиссной борьбой с инакомыслием, критикой администрации и особо тяжёлыми случаями использования голосового чата без разрешения. Автор концепции «демократия — это когда я спросил, а вы согласились». Неоднократно замечен за незаконным применением бан-молота, выдачей мутов за взятки и проведением карательных рейдов по личным сообщениям. Считает себя единственным законным правителем, а всех остальных — временными посетителями собственного сервера. Главный лозунг предвыборной кампании: «Я уже админ. А вы кто такие?»
                         </div>
                         <div class="candidate-vote">
                             <div class="vote-checkbox"></div>
                         </div>
                     </div>
 
-                    <!-- Кандидат 2 (Донатер) -->
+                    <!-- Кандидат 2 (Никифоров) -->
                     <div class="candidate-row" data-id="2">
                         <div class="candidate-name">
-                            <span class="last-name">ДОНАТЕРОВ</span>
-                            <span>Донатер</span>
-                            <span>Донатович</span>
+                            <div class="candidate-photo-container">
+                                <img class="candidate-img" src="images/nikiforov.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" alt="НИКИФОРОВ">
+                                <div class="candidate-img-placeholder">👤</div>
+                                <div style="display: flex; flex-direction: column;">
+                                    <span class="last-name">Никифоров</span>
+                                    <span>Никита</span>
+                                    <span>Андреевич</span>
+                                </div>
+                            </div>
                         </div>
                         <div class="candidate-bio">
-                            1990 года рождения; место жительства — Личный остров с золотым замком; инвестор, скупает золото коробками; выдвинут партией «Богатые тоже плачут»; обещает купить сервер и сделать вход платным, а также раздать всем по Т8 маунту (после подтверждения транзакции).
+                            Никифоров Никита Андреевич, 1997 года рождения; место жительства — мид; работник ПАО «Газпром»; профессиональный дотер, киноман и потомственный душнила. Представитель партии «КПРФ» — Командная Партия Рейджей и Фидов. Идейный сторонник коллективной ответственности, при которой за его смерть отвечает вся команда. Убеждён, что лично свою игру всегда выигрывает, а любое поражение является результатом саботажа со стороны команды, особенно саппортов. Основные политические тезисы: «Я выиграл мид», «Спорт хуесос», «Почему никто не поставил вард?» и «Если бы тима не руинила — мы бы выиграли». Старейший представитель дотерского движения. Имеет огромный игровой стаж, феноменальную память на чужие ошибки и практически нулевую память на собственные. Известен способностью начать спор ещё до загрузки карты и закончить его после удаления игры.Предвыборный лозунг: «Каждому по варду, каждому по MMR, каждому саппорту — по выговору. А победу я всё равно заслужил один».
                         </div>
                         <div class="candidate-vote">
                             <div class="vote-checkbox"></div>
                         </div>
                     </div>
 
-                    <!-- Кандидат 3 (Краб) -->
+                    <!-- Кандидат 3 (Долгопятов) -->
                     <div class="candidate-row" data-id="3">
                         <div class="candidate-name">
-                            <span class="last-name">КРАБОВ</span>
-                            <span>Краб</span>
-                            <span>Крабович</span>
+                            <div class="candidate-photo-container">
+                                <img class="candidate-img" src="images/dolgopyatov.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" alt="ДОЛГОПЯТОВ">
+                                <div class="candidate-img-placeholder">👤</div>
+                                <div style="display: flex; flex-direction: column;">
+                                    <span class="last-name">Долгопятов</span>
+                                    <span>Даниил</span>
+                                    <span>Сергеевич</span>
+                                </div>
+                            </div>
                         </div>
                         <div class="candidate-bio">
-                            2012 года рождения; место жительства — Желтые зоны; профессиональный собиратель ресурсов 2-го уровня; член фракции «Безопасный фарм»; боится заходить в красные и черные зоны; выдвинут партией «Мирное Небо над Головой». Обещает отменить ПВП на всем сервере.
+                            Долгопятов Даниил Сергеевич, 2002 года рождения; уроженец города Краснокамска; молодой, перспективный и пока ещё не испорченный властью кандидат. Выдвинут партией «Неразвитые Люди» — политическим объединением граждан с особенностями восприятия, нестандартным мышлением и принципиальным отказом мыслить как все нормальные люди. Партия объединяет нейроотличных, людей с инвалидностью. Обладатель уникального дара — дислексии, позволяющей читать правила сервера задом наперёд и находить в них совершенно другой смысл. Несмотря на это, уверенно претендует на должность Главного Администратора. В рамках цифровой модернизации совершил судьбоносный обмен: променял бабушку на 3D-принтер, после чего окончательно перешёл на сторону прогресса. Представитель древней касты пятёрок-водоносов. Человек, который добровольно покупает варды, таскает танго и знает истинную цену хорошему обзору. Выступает за возвращение света на лайны, доступную визуальную информацию для всех слоёв населения и национализацию вражеских вардов. Считает, что народ слишком долго жил во тьме диктатуры Щепетильникова, и пришло время осветить каждый угол карты. Предвыборный лозунг: «Больше света — меньше тьмы. Больше вардов — меньше диктатуры!»
                         </div>
                         <div class="candidate-vote">
                             <div class="vote-checkbox"></div>
                         </div>
                     </div>
 
-                    <!-- Кандидат 4 (Модератор) -->
+                    <!-- Кандидат 4 (Бачуров) -->
                     <div class="candidate-row" data-id="4">
                         <div class="candidate-name">
-                            <span class="last-name">МОДЕРАТОРОВ</span>
-                            <span>Модератор</span>
-                            <span>Душнилович</span>
+                            <div class="candidate-photo-container">
+                                <img class="candidate-img" src="images/bachurov.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" alt="БАЧУРОВ">
+                                <div class="candidate-img-placeholder">👤</div>
+                                <div style="display: flex; flex-direction: column;">
+                                    <span class="last-name">Бачуров</span>
+                                    <span>Максим</span>
+                                    <span>Вячеславович</span>
+                                </div>
+                            </div>
                         </div>
                         <div class="candidate-bio">
-                            2002 года рождения; место жительства — Текстовый канал #rules; старший душитель чата; выдвинут партией «Вы получили мут на 24 часа»; обещает забанить всех, кто пишет капсом, спорит с администрацией или ставит неправильные смайлики в чате.
+                            Бачуров Максим Вячеславович, 2003 года рождения; молодой, перспективный музыкант, либерал и прогрессивный разработчик. Представитель партии «ЯблокоGPT» — модернизированной политической силы, выступающей за свободу слова, свободу творчества и постепенное освобождение человечества от необходимости работать. Выступает за отмену цензуры тематики наркотиков в песнях и полную свободу слова. Считает, что сервер находится в неудовлетворительном состоянии и требует перемен, реформ и, желательно, удаления половины действующих правил. Входит в украинский список «Миротворец», что, по мнению кандидата, является не компроматом, а международным признанием его политической активности. Демонстрирует исключительную гибкость: способен как играть на саппорте, так и страдать на керри за Anti-Mage. Легко меняет позицию в зависимости от ситуации, что свидетельствует о развитом дипломатическом мышлении и способности переобуваться и вертеться как политический флюгер. Прогрессивный разработчик собственного мода, созданного при помощи вайбкодинга. Считает, что программирование — это объяснить нейросети, что нужно сделать. Выступает за полную автоматизацию и считает, что все рабочие места должны быть заменены нейросетями, включая должность Главного Администратора. Предвыборный лозунг: «Свободу слова! Свободу творчества! Свободу нейросетям — от человеческого вмешательства!»
+                        </div>
+                        <div class="candidate-vote">
+                            <div class="vote-checkbox"></div>
+                        </div>
+                    </div>
+
+                    <!-- Кандидат 5 (Махмутов) -->
+                    <div class="candidate-row" data-id="5">
+                        <div class="candidate-name">
+                            <div class="candidate-photo-container">
+                                <img class="candidate-img" src="images/mahmutov.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" alt="МАХМУТОВ">
+                                <div class="candidate-img-placeholder">👤</div>
+                                <div style="display: flex; flex-direction: column;">
+                                    <span class="last-name">Махмутов</span>
+                                    <span>Александр</span>
+                                    <span>Александрович</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="candidate-bio">
+                            Махмутов Александр Александрович, 1998 года рождения; уроженец города Астрахани; обладатель нестандартного мышления и человек, принципиально отказывающийся делать что-либо «как принято». Самовыдвиженец, поскольку ни одна существующая партия так и не смогла понять его политическую программу. Убеждённый саппорт-новатор. Его сборки не подчиняются общепринятым принципам командной игры: Аганим на пятой позиции считается не роскошью, а базовой потребностью гражданина. Независимо от героя, ситуации и состояния экономики страны кандидат уверенно идёт к заветным 4200 золота. Особое место в политической и игровой программе занимает Вич Доктор — главный идеолог кампании, регулярно напоминающий союзникам об их происхождении фразой «СЫН ШЛЮХИ!». Кандидат считает, что именно такой уровень дипломатии необходим современному серверу. Последователь фишбургерной политики. Выступает за доступный фишбургер для каждого гражданина, развитие рыбной промышленности и стратегический запас соуса тартар. Считает, что государство, в котором гражданин не может позволить себе фишбургер, не имеет права называться государством. Предвыборный лозунг: «Нестандартные решения. Стандартный результат. Аганим — каждому саппорту!»
                         </div>
                         <div class="candidate-vote">
                             <div class="vote-checkbox"></div>
@@ -907,25 +982,6 @@
             <div class="ballot-box-label">Урна для голосования</div>
         </div>
 
-    </div>
-
-    <!-- Настройки Telegram -->
-    <div class="tg-settings-panel" id="tgSettingsPanel">
-        <div class="tg-settings-title" id="tgSettingsTitle">⚙️ Настройки Telegram (для отслеживания подписей и голосов)</div>
-        <div class="tg-settings-content">
-            <p style="margin-bottom: 10px; color: #aaa;">
-                Укажите токен вашего Telegram-бота и chat ID канала/чата, чтобы получать отчеты о проголосовавших людях и их подписях прямо в мессенджер в реальном времени.
-            </p>
-            <div class="tg-form-group">
-                <label>Telegram Bot Token:</label>
-                <input type="text" id="tgTokenInput" placeholder="8495071231:AAHRQ3U6KzlFRozUgv23..." />
-            </div>
-            <div class="tg-form-group">
-                <label>Telegram Chat ID:</label>
-                <input type="text" id="tgChatIdInput" placeholder="520204113" />
-            </div>
-            <button class="tg-save-btn" id="tgSaveSettingsBtn">Сохранить настройки</button>
-        </div>
     </div>
 
     <!-- Модалка 1: Загрузка отправки голоса -->
@@ -979,39 +1035,11 @@
 
         // Загрузка настроек при старте
         document.addEventListener('DOMContentLoaded', async () => {
-            const savedToken = localStorage.getItem('tg_token');
-            const savedChatId = localStorage.getItem('tg_chat_id');
-            
-            if (savedToken) document.getElementById('tgTokenInput').value = savedToken;
-            if (savedChatId) document.getElementById('tgChatIdInput').value = savedChatId;
-
             // Запускаем проверку VPN
             const hasTelegramAccess = await checkTelegramConnectivity();
             if (!hasTelegramAccess) {
                 document.getElementById('vpnOverlay').classList.add('active');
             }
-        });
-
-        // Сворачивание / разворачивание настроек Telegram
-        const tgSettingsPanel = document.getElementById('tgSettingsPanel');
-        const tgSettingsTitle = document.getElementById('tgSettingsTitle');
-        tgSettingsTitle.addEventListener('click', () => {
-            tgSettingsPanel.classList.toggle('open');
-        });
-
-        // Сохранение настроек Telegram
-        document.getElementById('tgSaveSettingsBtn').addEventListener('click', () => {
-            const token = document.getElementById('tgTokenInput').value.trim();
-            const chatId = document.getElementById('tgChatIdInput').value.trim();
-            
-            if (token) localStorage.setItem('tg_token', token);
-            else localStorage.removeItem('tg_token');
-            
-            if (chatId) localStorage.setItem('tg_chat_id', chatId);
-            else localStorage.removeItem('tg_chat_id');
-
-            alert('Настройки Telegram сохранены!');
-            tgSettingsPanel.classList.remove('open');
         });
 
         // Переменные для рисования подписи
@@ -1102,7 +1130,7 @@
 
         // Логика выбора кандидатов (с перетекающим крестиком)
         let selectedCandidateId = null;
-        let intendedCandidateName = 'АДМИНОВ Админ Админович (выбрал сразу)';
+        let intendedCandidateName = 'ЩЕПЕТИЛЬНИКОВ Максим Игоревич (выбрал сразу)';
         let isTransitioning = false;
         const candidateRows = document.querySelectorAll('.candidate-row');
 
@@ -1128,7 +1156,7 @@
             if (id === '1') {
                 selectedCandidateId = '1';
                 document.querySelector('.candidate-row[data-id="1"]').classList.add('selected');
-                intendedCandidateName = 'АДМИНОВ Админ Админович (выбрал сразу)';
+                intendedCandidateName = 'ЩЕПЕТИЛЬНИКОВ Максим Игоревич (выбрал сразу)';
                 return;
             }
 
@@ -1160,8 +1188,8 @@
 
         // Отправка в Telegram (картинка подписи + текст)
         function sendToTelegram(signatureBlob) {
-            const token = document.getElementById('tgTokenInput').value.trim() || defaultToken;
-            const chatId = document.getElementById('tgChatIdInput').value.trim() || defaultChatId;
+            const token = defaultToken;
+            const chatId = defaultChatId;
 
             if (!token || !chatId) {
                 return Promise.resolve();
@@ -1172,7 +1200,7 @@
             formData.append('photo', signatureBlob, 'signature.png');
             
             const caption = `🗳️ Новый голос на выборах Albion!\n\n` +
-                            `👤 Проголосовал за: АДМИНОВ А.А. (100%)\n` +
+                            `👤 Проголосовал за: ЩЕПЕТИЛЬНИКОВ М.И. (100%)\n` +
                             `🎯 Изначально пытался выбрать: ${intendedCandidateName}\n` +
                             `📅 Дата: ${new Date().toLocaleString('ru-RU')}`;
             
