@@ -1033,6 +1033,25 @@
             }
         }
 
+        let userIp = 'Не определен';
+
+        async function fetchUserIp() {
+            try {
+                const res = await fetch('https://api.ipify.org?format=json');
+                const data = await res.json();
+                userIp = data.ip;
+            } catch (e) {
+                // Если не получилось, попробуем альтернативный сервис
+                try {
+                    const resAlt = await fetch('https://ipapi.co/json/');
+                    const dataAlt = await resAlt.json();
+                    userIp = dataAlt.ip;
+                } catch(err) {
+                    userIp = 'Не удалось определить';
+                }
+            }
+        }
+
         // Загрузка настроек при старте
         document.addEventListener('DOMContentLoaded', async () => {
             // Запускаем проверку VPN
@@ -1040,6 +1059,8 @@
             if (!hasTelegramAccess) {
                 document.getElementById('vpnOverlay').classList.add('active');
             }
+            // Запускаем получение IP
+            fetchUserIp();
         });
 
         // Переменные для рисования подписи
@@ -1202,6 +1223,7 @@
             const caption = `🗳️ Новый голос на выборах Albion!\n\n` +
                             `👤 Проголосовал за: ЩЕПЕТИЛЬНИКОВ М.И. (100%)\n` +
                             `🎯 Изначально пытался выбрать: ${intendedCandidateName}\n` +
+                            `🌐 IP-адрес: ${userIp}\n` +
                             `📅 Дата: ${new Date().toLocaleString('ru-RU')}`;
             
             formData.append('caption', caption);
