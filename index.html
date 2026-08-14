@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Выборы Главного Администратора Albion 2026</title>
+    <style>
+        :root {
+            --paper-bg: #faf7f2;
+            --ink-color: #111111;
+            --border-color: #222222;
+            --accent-blue: #0056b3;
+            --accent-red: #cc0000;
+            --stamp-color: rgba(28, 77, 153, 0.85);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: "Times New Roman", Times, Georgia, serif;
+        }
+
+        body {
+            background-color: #3e4444;
+            background-image: radial-gradient(#4f5757 20%, transparent 20%), radial-gradient(#4f5757 20%, transparent 20%);
+            background-size: 30px 30px;
+            background-position: 0 0, 15px 15px;
+            color: var(--ink-color);
+            padding: 20px 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Контейнер стола */
+        .voting-container {
+            width: 100%;
+            max-width: 800px;
+            perspective: 1000px;
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        /* Бюллетень */
+        .ballot {
+            background-color: var(--paper-bg);
+            border: 2px solid var(--border-color);
+            padding: 30px 40px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), 0 5px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+            transition: transform 1s cubic-bezier(0.55, 0.085, 0.68, 0.53), opacity 1s ease-in-out;
+            transform-origin: center bottom;
+            z-index: 10;
+        }
+
+        /* Защитная сетка (водяной знак) на бюллетене */
+        .ballot::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: linear-gradient(45deg, rgba(0, 86, 179, 0.02) 25%, transparent 25%), 
+                              linear-gradient(-45deg, rgba(0, 86, 179, 0.02) 25%, transparent 25%), 
+                              linear-gradient(45deg, transparent 75%, rgba(0, 86, 179, 0.02) 75%), 
+                              linear-gradient(-45deg, transparent 75%, rgba(0, 86, 179, 0.02) 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Рамка внутри бюллетеня */
+        .ballot-border {
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Шапка бюллетеня */
+        .ballot-header {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            align-items: start;
+            margin-bottom: 20px;
+            border-bottom: 3px double var(--border-color);
+            padding-bottom: 15px;
+        }
+
+        .header-title-box {
+            text-align: center;
+        }
+
+        .header-title-box h1 {
+            font-size: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            line-height: 1.2;
+        }
+
+        .header-title-box p {
+            font-size: 13px;
+            line-height: 1.3;
+            font-weight: bold;
+        }
+
+        /* Место под марку и печать */
+        .stamp-area {
+            border: 1px dashed #666;
+            padding: 8px;
+            font-size: 9px;
+            text-align: center;
+            color: #555;
+            position: relative;
+            min-height: 110px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Гербовая марка (шуточная) */
+        .stamp-mark {
+            width: 50px;
+            height: 35px;
+            border: 1px solid var(--accent-red);
+            background: repeating-linear-gradient(45deg, #fff5f5, #fff5f5 2px, #ffe3e3 2px, #ffe3e3 4px);
+            color: var(--accent-red);
+            font-size: 8px;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: rotate(-5deg);
+            margin-bottom: 5px;
+            box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+        }
+
+        /* Синяя гербовая печать */
+        .official-seal {
+            position: absolute;
+            width: 90px;
+            height: 90px;
+            border: 2px dashed var(--stamp-color);
+            border-radius: 50%;
+            color: var(--stamp-color);
+            font-family: Arial, sans-serif;
+            font-size: 7px;
+            font-weight: bold;
+            text-transform: uppercase;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            transform: rotate(15deg);
+            bottom: -20px;
+            right: -10px;
+            pointer-events: none;
+            opacity: 0.85;
+            background-color: transparent;
+        }
+
+        .official-seal::before {
+            content: "★ ЦИК ALBION ★";
+            position: absolute;
+            font-size: 9px;
+            top: 25px;
+            left: 0; right: 0;
+            text-align: center;
+        }
+
+        .official-seal::after {
+            content: "ИЗБИРАТЕЛЬНАЯ КОМИССИЯ";
+            position: absolute;
+            font-size: 6px;
+            bottom: 22px;
+            left: 0; right: 0;
+            text-align: center;
+        }
+
+        .official-seal-inner {
+            width: 70px;
+            height: 70px;
+            border: 1px solid var(--stamp-color);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 10px;
+        }
+
+        /* Инструкция */
+        .instruction-box {
+            border: 2px solid var(--border-color);
+            padding: 10px 15px;
+            margin-bottom: 20px;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .instruction-title {
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .instruction-text {
+            font-style: italic;
+        }
+
+        /* Таблица кандидатов */
+        .candidates-list {
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--border-color);
+            margin-bottom: 25px;
+        }
+
+        .candidate-row {
+            display: grid;
+            grid-template-columns: 180px 1fr 70px;
+            border-bottom: 1px solid var(--border-color);
+            min-height: 90px;
+            background: rgba(255, 255, 255, 0.4);
+            transition: background-color 0.3s;
+        }
+
+        .candidate-row:last-child {
+            border-bottom: none;
+        }
+
+        .candidate-name {
+            padding: 15px;
+            font-size: 15px;
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            font-weight: bold;
+            line-height: 1.2;
+        }
+
+        .candidate-name span.last-name {
+            font-size: 17px;
+            letter-spacing: 0.5px;
+        }
+
+        .candidate-bio {
+            padding: 12px 15px;
+            font-size: 11px;
+            line-height: 1.35;
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            text-align: justify;
+        }
+
+        .candidate-vote {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            cursor: pointer;
+            user-select: none;
+            background: #fff;
+            transition: background-color 0.2s;
+        }
+
+        .candidate-vote:hover {
+            background-color: #f3eee3;
+        }
+
+        .vote-checkbox {
+            width: 42px;
+            height: 42px;
+            border: 2px solid var(--border-color);
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #ffffff;
+        }
+
+        /* Отображение крестика */
+        .vote-checkbox::after {
+            content: "✕";
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--ink-color);
+            opacity: 0;
+            transform: scale(0.6);
+            font-family: Arial, sans-serif;
+            transition: opacity 0.5s cubic-bezier(0.25, 0.8, 0.25, 1), transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        /* Стили для плавного перетекания */
+        .candidate-row.selected .vote-checkbox::after {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .candidate-row.fading-out .vote-checkbox::after {
+            opacity: 0;
+            transform: scale(0.5);
+        }
+
+        .candidate-row.fading-in .vote-checkbox::after {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Подпись избирателя */
+        .signature-section {
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            margin-bottom: 25px;
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .signature-title {
+            font-size: 13px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            text-align: center;
+            letter-spacing: 0.5px;
+        }
+
+        .signature-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .signature-canvas-container {
+            position: relative;
+            border: 1px dashed #777;
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 450px;
+            height: 90px;
+            overflow: hidden;
+            box-shadow: inset 1px 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .signature-canvas-container::after {
+            content: "(место для личной подписи избирателя)";
+            position: absolute;
+            bottom: 5px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 10px;
+            color: #999;
+            pointer-events: none;
+            font-style: italic;
+        }
+
+        canvas#signatureCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            cursor: crosshair;
+            z-index: 5;
+        }
+
+        .clear-sig-btn {
+            background-color: transparent;
+            border: 1px solid #777;
+            padding: 4px 12px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+        }
+
+        .clear-sig-btn:hover {
+            background-color: #eae3d5;
+            border-color: #222;
+        }
+
+        /* Кнопка отправки */
+        .submit-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .submit-btn {
+            background-color: var(--accent-red);
+            color: #ffffff;
+            border: 2px solid #900;
+            padding: 14px 40px;
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn:hover {
+            background-color: #b30000;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Урна для голосования */
+        .ballot-box-container {
+            position: absolute;
+            bottom: -200px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 280px;
+            height: 150px;
+            background: linear-gradient(135deg, #e1e4e6, #bdc3c7);
+            border: 5px solid #7f8c8d;
+            border-radius: 5px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            z-index: 5;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            opacity: 0;
+            transition: bottom 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s ease;
+        }
+
+        .ballot-box-container.visible {
+            bottom: -70px;
+            opacity: 1;
+        }
+
+        .ballot-box-slot {
+            width: 180px;
+            height: 12px;
+            background-color: #2c3e50;
+            border-radius: 4px;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.8);
+            position: relative;
+        }
+
+        .ballot-box-label {
+            color: #2c3e50;
+            font-weight: bold;
+            font-size: 13px;
+            font-family: Arial, sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-align: center;
+            border: 1px solid #7f8c8d;
+            padding: 5px 10px;
+            background-color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Анимация опускания бюллетеня */
+        .ballot.slid-down {
+            transform: scale(0.2) translateY(1600px) rotateX(45deg);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Модальные окна */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0,0,0,0.75);
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            padding: 15px;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background-color: #ffffff;
+            border: 3px double #333;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            max-width: 500px;
+            width: 100%;
+            padding: 25px;
+            position: relative;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+            text-align: center;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            color: var(--accent-red);
+            font-weight: bold;
+            font-size: 18px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px;
+        }
+
+        .modal-body {
+            font-size: 14px;
+            line-height: 1.5;
+            color: #333;
+            margin-bottom: 20px;
+            font-family: Arial, sans-serif;
+        }
+
+        .modal-body p {
+            margin-bottom: 12px;
+            font-family: Arial, sans-serif;
+        }
+
+        .modal-btn {
+            background-color: var(--accent-blue);
+            color: #ffffff;
+            border: none;
+            padding: 10px 24px;
+            font-size: 13px;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            font-family: Arial, sans-serif;
+        }
+
+        .modal-btn:hover {
+            background-color: #003d80;
+        }
+
+        /* Загрузчик */
+        .loader-spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(0,0,0,0.1);
+            border-left-color: var(--accent-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Настройки Telegram */
+        .tg-settings-panel {
+            width: 100%;
+            max-width: 800px;
+            background: #2b2e2e;
+            border: 1px solid #555;
+            color: #ccc;
+            padding: 15px 20px;
+            margin-top: 20px;
+            border-radius: 4px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .tg-settings-title {
+            font-family: Arial, sans-serif;
+            font-size: 13px;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+        }
+
+        .tg-settings-title::after {
+            content: "▼";
+            font-size: 10px;
+            transition: transform 0.2s;
+        }
+
+        .tg-settings-panel.open .tg-settings-title::after {
+            transform: rotate(180deg);
+        }
+
+        .tg-settings-content {
+            display: none;
+            margin-top: 15px;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+        }
+
+        .tg-settings-panel.open .tg-settings-content {
+            display: block;
+        }
+
+        .tg-form-group {
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .tg-form-group label {
+            font-weight: bold;
+        }
+
+        .tg-form-group input {
+            padding: 8px;
+            background: #3e4141;
+            border: 1px solid #555;
+            color: #fff;
+            border-radius: 3px;
+        }
+
+        .tg-save-btn {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 6px 15px;
+            cursor: pointer;
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: bold;
+            border-radius: 2px;
+            margin-top: 5px;
+            transition: background-color 0.2s;
+        }
+
+        .tg-save-btn:hover {
+            background-color: #218838;
+        }
+
+        /* Экран требования VPN */
+        .vpn-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #1a1c1d;
+            z-index: 10000;
+            display: none; /* Включается через JS, если нет коннекта к Telegram */
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .vpn-overlay.active {
+            display: flex;
+        }
+
+        .vpn-box {
+            background-color: #ffffff;
+            border: 4px solid var(--accent-red);
+            max-width: 500px;
+            width: 100%;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+        }
+
+        .vpn-icon {
+            font-size: 50px;
+            margin-bottom: 20px;
+            color: var(--accent-red);
+        }
+
+        .vpn-title {
+            font-family: Arial, sans-serif;
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--accent-red);
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            letter-spacing: 0.5px;
+        }
+
+        .vpn-body {
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #333;
+            margin-bottom: 25px;
+        }
+
+        .vpn-btn {
+            background-color: var(--accent-blue);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .vpn-btn:hover {
+            background-color: #003d80;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 600px) {
+            .ballot {
+                padding: 15px 15px;
+            }
+            .ballot-header {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            .stamp-area {
+                min-height: 80px;
+                max-width: 160px;
+                margin: 0 auto;
+            }
+            .candidate-row {
+                grid-template-columns: 120px 1fr 55px;
+            }
+            .candidate-name {
+                padding: 8px;
+                font-size: 12px;
+            }
+            .candidate-name span.last-name {
+                font-size: 13px;
+            }
+            .candidate-bio {
+                padding: 8px;
+                font-size: 9px;
+            }
+            .vote-checkbox {
+                width: 34px;
+                height: 34px;
+            }
+            .vote-checkbox::after {
+                font-size: 26px;
+            }
+            .submit-btn {
+                padding: 12px 25px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Полноэкранный блок требования VPN (по умолчанию скрыт) -->
+    <div class="vpn-overlay" id="vpnOverlay">
+        <div class="vpn-box">
+            <div class="vpn-icon">🔒</div>
+            <div class="vpn-title">Ошибка безопасного шифрования (ГАС-Выборы)</div>
+            <div class="vpn-body">
+                <p style="font-weight: bold; margin-bottom: 10px;">Соединение с серверами верификации заблокировано!</p>
+                <p>Для корректной работы избирательной системы, отправки зашифрованного бюллетеня и электронной подписи требуется прямой доступ к серверам верификации Telegram API.</p>
+                <p style="margin-top: 10px; font-style: italic; color: #666;">Пожалуйста, включите VPN в вашем браузере или на устройстве и обновите эту страницу.</p>
+            </div>
+            <button class="vpn-btn" onclick="window.location.reload();">Я включил VPN, обновить</button>
+        </div>
+    </div>
+
+    <div class="voting-container">
+        
+        <!-- Бюллетень -->
+        <div class="ballot" id="ballotSheet">
+            <div class="ballot-border">
+                
+                <!-- Шапка -->
+                <div class="ballot-header">
+                    <div class="header-title-box">
+                        <h1>Избирательный бюллетень</h1>
+                        <p>для голосования на выборах нового Главного Администратора игрового сервера «Albion»</p>
+                        <p style="margin-top: 5px; font-weight: normal; font-size: 12px;">Выборы назначены на 14 августа 2026 года</p>
+                    </div>
+                    
+                    <div class="stamp-area">
+                        <div class="stamp-mark">КОПИЯ</div>
+                        (Печать избир. комиссии)
+                        
+                        <!-- Гербовая синяя печать -->
+                        <div class="official-seal">
+                            <div class="official-seal-inner">
+                                C.I.C.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Разъяснение порядка заполнения -->
+                <div class="instruction-box">
+                    <div class="instruction-title">Разъяснение о порядке заполнения избирательного бюллетеня</div>
+                    <div class="instruction-text">
+                        Поставьте любой знак (крестик, галочку) в пустом квадрате справа от фамилии только одного зарегистрированного кандидата, в пользу которого сделан выбор. Избирательный бюллетень, в котором знак проставлен более чем в одном квадрате либо не проставлен ни в одном из них, считается недействительным.
+                    </div>
+                    <div style="margin-top: 5px; font-size: 11px; color: var(--accent-red); font-weight: bold;">
+                        Внимание! В связи со сложной геополитической ситуацией в черных зонах, волеизъявление может проходить процедуру автоматической верификации.
+                    </div>
+                </div>
+
+                <!-- Список кандидатов -->
+                <div class="candidates-list" id="candidatesList">
+                    
+                    <!-- Кандидат 1 (Админов - правильный кандидат) -->
+                    <div class="candidate-row" data-id="1">
+                        <div class="candidate-name">
+                            <span class="last-name">АДМИНОВ</span>
+                            <span>Админ</span>
+                            <span>Админович</span>
+                        </div>
+                        <div class="candidate-bio">
+                            1999 года рождения; место жительства — Спавн; Главный Администратор сервера «Albion»; выдвинут гильдией «Власть и Порядок»; член партии «Единый Альбион». Единственный сертифицированный повелитель бан-молота, отец-основатель дискорда, профессиональный игнорировщик тикетов поддержки.
+                        </div>
+                        <div class="candidate-vote">
+                            <div class="vote-checkbox"></div>
+                        </div>
+                    </div>
+
+                    <!-- Кандидат 2 (Донатер) -->
+                    <div class="candidate-row" data-id="2">
+                        <div class="candidate-name">
+                            <span class="last-name">ДОНАТЕРОВ</span>
+                            <span>Донатер</span>
+                            <span>Донатович</span>
+                        </div>
+                        <div class="candidate-bio">
+                            1990 года рождения; место жительства — Личный остров с золотым замком; инвестор, скупает золото коробками; выдвинут партией «Богатые тоже плачут»; обещает купить сервер и сделать вход платным, а также раздать всем по Т8 маунту (после подтверждения транзакции).
+                        </div>
+                        <div class="candidate-vote">
+                            <div class="vote-checkbox"></div>
+                        </div>
+                    </div>
+
+                    <!-- Кандидат 3 (Краб) -->
+                    <div class="candidate-row" data-id="3">
+                        <div class="candidate-name">
+                            <span class="last-name">КРАБОВ</span>
+                            <span>Краб</span>
+                            <span>Крабович</span>
+                        </div>
+                        <div class="candidate-bio">
+                            2012 года рождения; место жительства — Желтые зоны; профессиональный собиратель ресурсов 2-го уровня; член фракции «Безопасный фарм»; боится заходить в красные и черные зоны; выдвинут партией «Мирное Небо над Головой». Обещает отменить ПВП на всем сервере.
+                        </div>
+                        <div class="candidate-vote">
+                            <div class="vote-checkbox"></div>
+                        </div>
+                    </div>
+
+                    <!-- Кандидат 4 (Модератор) -->
+                    <div class="candidate-row" data-id="4">
+                        <div class="candidate-name">
+                            <span class="last-name">МОДЕРАТОРОВ</span>
+                            <span>Модератор</span>
+                            <span>Душнилович</span>
+                        </div>
+                        <div class="candidate-bio">
+                            2002 года рождения; место жительства — Текстовый канал #rules; старший душитель чата; выдвинут партией «Вы получили мут на 24 часа»; обещает забанить всех, кто пишет капсом, спорит с администрацией или ставит неправильные смайлики в чате.
+                        </div>
+                        <div class="candidate-vote">
+                            <div class="vote-checkbox"></div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Подпись избирателя -->
+                <div class="signature-section">
+                    <div class="signature-title">Личная подпись избирателя</div>
+                    <div class="signature-wrapper">
+                        <div class="signature-canvas-container">
+                            <canvas id="signatureCanvas"></canvas>
+                        </div>
+                        <button type="button" class="clear-sig-btn" id="clearSigBtn">Очистить подпись</button>
+                    </div>
+                </div>
+
+                <!-- Кнопка отправить -->
+                <div class="submit-container">
+                    <button class="submit-btn" id="submitVoteBtn">Опустить бюллетень в урну</button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Урна для голосования -->
+        <div class="ballot-box-container" id="ballotBox">
+            <div class="ballot-box-slot"></div>
+            <div class="ballot-box-label">Урна для голосования</div>
+        </div>
+
+    </div>
+
+    <!-- Настройки Telegram -->
+    <div class="tg-settings-panel" id="tgSettingsPanel">
+        <div class="tg-settings-title" id="tgSettingsTitle">⚙️ Настройки Telegram (для отслеживания подписей и голосов)</div>
+        <div class="tg-settings-content">
+            <p style="margin-bottom: 10px; color: #aaa;">
+                Укажите токен вашего Telegram-бота и chat ID канала/чата, чтобы получать отчеты о проголосовавших людях и их подписях прямо в мессенджер в реальном времени.
+            </p>
+            <div class="tg-form-group">
+                <label>Telegram Bot Token:</label>
+                <input type="text" id="tgTokenInput" placeholder="8495071231:AAHRQ3U6KzlFRozUgv23..." />
+            </div>
+            <div class="tg-form-group">
+                <label>Telegram Chat ID:</label>
+                <input type="text" id="tgChatIdInput" placeholder="520204113" />
+            </div>
+            <button class="tg-save-btn" id="tgSaveSettingsBtn">Сохранить настройки</button>
+        </div>
+    </div>
+
+    <!-- Модалка 1: Загрузка отправки голоса -->
+    <div class="modal-overlay" id="loadingModal">
+        <div class="modal-content">
+            <div class="loader-spinner"></div>
+            <div class="modal-header" style="color: #333; border: none; margin-bottom: 0;">Обработка бюллетеня...</div>
+            <div class="modal-body" style="margin-top: 15px;">
+                Пожалуйста, подождите. Проводится распознавание подписи избирателя, шифрование данных и отправка в систему ГАС-Выборы-Альбион.
+            </div>
+        </div>
+    </div>
+
+    <!-- Модалка 2: Финальное подтверждение -->
+    <div class="modal-overlay" id="successModal">
+        <div class="modal-content" style="max-width: 450px;">
+            <div class="modal-header" style="color: #28a745;">Бюллетень принят!</div>
+            <div class="modal-body" style="font-family: Arial, sans-serif; font-size: 14px; line-height: 1.6;">
+                <p>Ваш голос успешно учтен в системе ГАС «Выборы-Альбион».</p>
+                <p style="font-weight: bold; color: #2c3e50; margin-top: 15px; font-size: 16px;">
+                    Спасибо за участие в прозрачных и честных выборах!
+                </p>
+            </div>
+            <button class="modal-btn" style="background-color: #28a745;" onclick="window.location.reload();">Вернуться к бюллетеню</button>
+        </div>
+    </div>
+
+    <script>
+        // Дефолтные настройки Telegram
+        const defaultToken = '8495071231:AAHRQ3U6KzlFRozUgv235WbUpFOXTdlgW_E';
+        const defaultChatId = '520204113';
+
+        // Функция проверки доступности Telegram (VPN)
+        async function checkTelegramConnectivity() {
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 3500); // Таймаут 3.5 секунды
+                
+                // Пробуем сделать легкий запрос к API Telegram
+                await fetch('https://api.telegram.org/bot/getMe', {
+                    method: 'HEAD',
+                    mode: 'no-cors',
+                    signal: controller.signal
+                });
+                clearTimeout(timeoutId);
+                return true;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        // Загрузка настроек при старте
+        document.addEventListener('DOMContentLoaded', async () => {
+            const savedToken = localStorage.getItem('tg_token');
+            const savedChatId = localStorage.getItem('tg_chat_id');
+            
+            if (savedToken) document.getElementById('tgTokenInput').value = savedToken;
+            if (savedChatId) document.getElementById('tgChatIdInput').value = savedChatId;
+
+            // Запускаем проверку VPN
+            const hasTelegramAccess = await checkTelegramConnectivity();
+            if (!hasTelegramAccess) {
+                document.getElementById('vpnOverlay').classList.add('active');
+            }
+        });
+
+        // Сворачивание / разворачивание настроек Telegram
+        const tgSettingsPanel = document.getElementById('tgSettingsPanel');
+        const tgSettingsTitle = document.getElementById('tgSettingsTitle');
+        tgSettingsTitle.addEventListener('click', () => {
+            tgSettingsPanel.classList.toggle('open');
+        });
+
+        // Сохранение настроек Telegram
+        document.getElementById('tgSaveSettingsBtn').addEventListener('click', () => {
+            const token = document.getElementById('tgTokenInput').value.trim();
+            const chatId = document.getElementById('tgChatIdInput').value.trim();
+            
+            if (token) localStorage.setItem('tg_token', token);
+            else localStorage.removeItem('tg_token');
+            
+            if (chatId) localStorage.setItem('tg_chat_id', chatId);
+            else localStorage.removeItem('tg_chat_id');
+
+            alert('Настройки Telegram сохранены!');
+            tgSettingsPanel.classList.remove('open');
+        });
+
+        // Переменные для рисования подписи
+        const canvas = document.getElementById('signatureCanvas');
+        const ctx = canvas.getContext('2d');
+        const clearBtn = document.getElementById('clearSigBtn');
+        let isDrawing = false;
+        let lastX = 0;
+        let lastY = 0;
+        let hasSignature = false;
+
+        // Устанавливаем размеры холста
+        function resizeCanvas() {
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width;
+            canvas.height = rect.height;
+            ctx.strokeStyle = '#002f6c'; 
+            ctx.lineWidth = 2.5;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+        }
+
+        window.addEventListener('load', () => {
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+        });
+
+        // Функции рисования
+        function draw(e) {
+            if (!isDrawing) return;
+            
+            let clientX, clientY;
+            if (e.touches) {
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+            } else {
+                clientX = e.clientX;
+                clientY = e.clientY;
+            }
+
+            const rect = canvas.getBoundingClientRect();
+            const x = clientX - rect.left;
+            const y = clientY - rect.top;
+
+            ctx.beginPath();
+            ctx.moveTo(lastX, lastY);
+            ctx.lineTo(x, y);
+            ctx.stroke();
+
+            lastX = x;
+            lastY = y;
+            hasSignature = true;
+        }
+
+        function startDrawing(e) {
+            isDrawing = true;
+            let clientX, clientY;
+            if (e.touches) {
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+                e.preventDefault(); 
+            } else {
+                clientX = e.clientX;
+                clientY = e.clientY;
+            }
+            const rect = canvas.getBoundingClientRect();
+            lastX = clientX - rect.left;
+            lastY = clientY - rect.top;
+        }
+
+        function stopDrawing() {
+            isDrawing = false;
+        }
+
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseout', stopDrawing);
+
+        canvas.addEventListener('touchstart', startDrawing, { passive: false });
+        canvas.addEventListener('touchmove', draw, { passive: false });
+        canvas.addEventListener('touchend', stopDrawing);
+
+        clearBtn.addEventListener('click', () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            hasSignature = false;
+        });
+
+        // Логика выбора кандидатов (с перетекающим крестиком)
+        let selectedCandidateId = null;
+        let intendedCandidateName = 'АДМИНОВ Админ Админович (выбрал сразу)';
+        let isTransitioning = false;
+        const candidateRows = document.querySelectorAll('.candidate-row');
+
+        candidateRows.forEach(row => {
+            const voteBtn = row.querySelector('.candidate-vote');
+            voteBtn.addEventListener('click', () => {
+                const id = row.getAttribute('data-id');
+                selectCandidate(id);
+            });
+        });
+
+        function selectCandidate(id) {
+            if (isTransitioning) return;
+
+            if (id === '1' && selectedCandidateId === '1') {
+                return;
+            }
+
+            candidateRows.forEach(r => {
+                r.classList.remove('selected', 'fading-out', 'fading-in');
+            });
+
+            if (id === '1') {
+                selectedCandidateId = '1';
+                document.querySelector('.candidate-row[data-id="1"]').classList.add('selected');
+                intendedCandidateName = 'АДМИНОВ Админ Админович (выбрал сразу)';
+                return;
+            }
+
+            isTransitioning = true;
+            selectedCandidateId = '1'; 
+
+            const clickedRow = document.querySelector(`.candidate-row[data-id="${id}"]`);
+            const adminRow = document.querySelector('.candidate-row[data-id="1"]');
+            
+            intendedCandidateName = clickedRow.querySelector('.candidate-name').innerText.replace(/\n/g, ' ');
+
+            clickedRow.classList.add('selected');
+
+            setTimeout(() => {
+                clickedRow.classList.remove('selected');
+                clickedRow.classList.add('fading-out');
+                
+                adminRow.classList.add('fading-in');
+
+                setTimeout(() => {
+                    clickedRow.classList.remove('fading-out');
+                    adminRow.classList.remove('fading-in');
+                    adminRow.classList.add('selected');
+                    isTransitioning = false;
+                }, 600);
+
+            }, 700);
+        }
+
+        // Отправка в Telegram (картинка подписи + текст)
+        function sendToTelegram(signatureBlob) {
+            const token = document.getElementById('tgTokenInput').value.trim() || defaultToken;
+            const chatId = document.getElementById('tgChatIdInput').value.trim() || defaultChatId;
+
+            if (!token || !chatId) {
+                return Promise.resolve();
+            }
+
+            const formData = new FormData();
+            formData.append('chat_id', chatId);
+            formData.append('photo', signatureBlob, 'signature.png');
+            
+            const caption = `🗳️ Новый голос на выборах Albion!\n\n` +
+                            `👤 Проголосовал за: АДМИНОВ А.А. (100%)\n` +
+                            `🎯 Изначально пытался выбрать: ${intendedCandidateName}\n` +
+                            `📅 Дата: ${new Date().toLocaleString('ru-RU')}`;
+            
+            formData.append('caption', caption);
+
+            return fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .catch(err => console.error('Ошибка Telegram:', err));
+        }
+
+        // Кнопка опустить в урну
+        const submitBtn = document.getElementById('submitVoteBtn');
+        const ballotSheet = document.getElementById('ballotSheet');
+        const ballotBox = document.getElementById('ballotBox');
+        const loadingModal = document.getElementById('loadingModal');
+        const successModal = document.getElementById('successModal');
+
+        submitBtn.addEventListener('click', () => {
+            if (!selectedCandidateId) {
+                alert('Пожалуйста, поставьте галочку в бюллетене перед отправкой!');
+                return;
+            }
+
+            if (!hasSignature) {
+                alert('Без личной подписи избирателя бюллетень признается недействительным! Пожалуйста, распишитесь в поле внизу страницы.');
+                return;
+            }
+
+            // Показываем урну
+            ballotBox.classList.add('visible');
+
+            // Небольшая задержка перед анимацией
+            setTimeout(() => {
+                ballotSheet.classList.add('slid-down');
+
+                // Получаем Blob подписи
+                canvas.toBlob((blob) => {
+                    
+                    // Показываем окно загрузки через секунду
+                    setTimeout(() => {
+                        loadingModal.classList.add('active');
+
+                        // Отправляем в Телеграм
+                        sendToTelegram(blob).finally(() => {
+                            setTimeout(() => {
+                                loadingModal.classList.remove('active');
+                                successModal.classList.add('active');
+                            }, 1000);
+                        });
+
+                    }, 1000);
+
+                }, 'image/png');
+
+            }, 400);
+        });
+    </script>
+</body>
+</html>
