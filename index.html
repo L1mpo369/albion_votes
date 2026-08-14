@@ -768,25 +768,45 @@
                 margin: 0 auto;
             }
             .candidate-row {
-                grid-template-columns: 170px 1fr 55px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                padding: 20px 15px;
+                min-height: auto;
+                border-bottom: 2px solid var(--border-color);
             }
             .candidate-name {
-                padding: 8px;
-                font-size: 12px;
-            }
-            .candidate-name span.last-name {
-                font-size: 13px;
+                border-right: none;
+                border-bottom: 1px dashed var(--border-color);
+                padding: 10px 0;
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
             }
             .candidate-bio {
-                padding: 8px;
-                font-size: 9px;
+                border-right: none;
+                border-bottom: 1px dashed var(--border-color);
+                padding: 15px 5px;
+                font-size: 11px;
+                text-align: justify;
+                width: 100%;
+            }
+            .candidate-vote {
+                width: 100%;
+                background: transparent;
+                padding: 15px 0 5px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
             }
             .vote-checkbox {
-                width: 34px;
-                height: 34px;
+                width: 44px;
+                height: 44px;
             }
             .vote-checkbox::after {
-                font-size: 26px;
+                font-size: 32px;
             }
             .submit-btn {
                 padding: 12px 25px;
